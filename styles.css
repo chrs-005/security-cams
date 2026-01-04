@@ -9,8 +9,8 @@
   --bad:#ff4d6d;
 }
 
-*{box-sizing:border-box}
-html,body{height:100%}
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
 body{
   margin:0;
   background:
@@ -23,12 +23,13 @@ body{
 
 .mono{
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  letter-spacing: .04em;
+  letter-spacing: .03em;
 }
 
+/* ===== Container ===== */
 .frame{
-  width:min(980px, 92vw);
-  margin: 28px auto;
+  width:min(980px, 94vw);
+  margin: 16px auto;
   border:1px solid rgba(57,255,136,.25);
   border-radius: 14px;
   background: rgba(3,6,6,.55);
@@ -37,6 +38,14 @@ body{
     0 18px 70px rgba(0,0,0,.55);
   overflow:hidden;
   position:relative;
+}
+
+@media (max-width: 520px){
+  .frame{
+    width: 94vw;
+    margin: 10px auto;
+    border-radius: 12px;
+  }
 }
 
 .frame::before{
@@ -55,23 +64,8 @@ body{
   mix-blend-mode: overlay;
   opacity:.35;
 }
-.cards.four{
-  margin-top: 14px;
-  display:grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
 
-@media (min-width: 780px){
-  .cards.four{
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.cards.four .card img{
-  height: 320px;
-}
-
+/* ===== Topbar ===== */
 .topbar{
   display:flex;
   align-items:center;
@@ -79,6 +73,7 @@ body{
   padding:12px 14px;
   background: linear-gradient(180deg, rgba(10,20,16,.85), rgba(5,10,8,.55));
   border-bottom: 1px solid rgba(57,255,136,.18);
+  flex-wrap: wrap;              /* mobile: allow wrapping */
 }
 
 .dot{
@@ -88,7 +83,8 @@ body{
 }
 
 .title{
-  flex:1;
+  flex:1 1 260px;
+  min-width: 180px;
   font-size: 13px;
   opacity:.95;
 }
@@ -108,8 +104,15 @@ body{
   box-shadow: 0 0 12px rgba(57,255,136,.15);
 }
 
-.panel{
-  padding: 18px 18px 16px;
+@media (max-width: 520px){
+  .title{ flex-basis: 100%; }
+  .status{ width:100%; justify-content:space-between; }
+}
+
+/* ===== Panel / Log ===== */
+.panel{ padding: 16px 16px 14px; }
+@media (max-width: 520px){
+  .panel{ padding: 14px 12px 12px; }
 }
 
 .log{
@@ -119,11 +122,13 @@ body{
   background: rgba(4,10,8,.55);
   line-height: 1.45;
   font-size: 13px;
+  overflow-wrap: anywhere; /* avoid overflow on long text */
 }
 
-.spacer{height:10px}
-.hint{color:var(--glow);}
+.spacer{ height:10px; }
+.hint{ color:var(--glow); }
 
+/* ===== Form ===== */
 .form{
   margin-top: 14px;
   display:grid;
@@ -134,10 +139,12 @@ body{
   display:flex;
   gap:10px;
   align-items:center;
+  flex-wrap: wrap;  /* mobile: stack nicely */
 }
 
 .code{
-  width: 140px;
+  width: 160px;
+  max-width: 100%;
   padding: 10px 12px;
   border-radius: 10px;
   background: rgba(0,0,0,.35);
@@ -164,6 +171,8 @@ body{
   display:inline-flex;
   align-items:center;
   justify-content:center;
+  user-select:none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn:hover{
@@ -171,15 +180,20 @@ body{
   box-shadow: 0 0 18px rgba(57,255,136,.14);
 }
 
+@media (max-width: 520px){
+  .code{ flex: 1 1 100%; width:100%; }
+  .btn{ flex: 1 1 100%; width:100%; }
+}
+
 .msg{
   min-height: 18px;
   font-size: 12px;
   color: var(--dim);
 }
+.msg.ok{ color: var(--glow); }
+.msg.bad{ color: var(--bad); }
 
-.msg.ok{color: var(--glow);}
-.msg.bad{color: var(--bad);}
-
+/* ===== Table (mobile scroll) ===== */
 .table{
   margin-top: 16px;
   border: 1px solid rgba(57,255,136,.18);
@@ -187,21 +201,12 @@ body{
   overflow:hidden;
   background: rgba(2,6,5,.35);
 }
-.evidence-row{
-  margin: 6px 0;
-  padding-left: 12px;
-  border-left: 2px solid rgba(57,255,136,.4);
-}
 
-.evidence-row a{
-  color: var(--glow);
-  text-decoration: none;
+/* wrap table content in horizontal scroll on small screens */
+.table{
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
-
-.evidence-row a:hover{
-  text-shadow: 0 0 8px rgba(57,255,136,.4);
-}
-
 
 .thead, .tr{
   display:grid;
@@ -209,12 +214,15 @@ body{
   gap: 10px;
   padding: 10px 12px;
   font-size: 12px;
+  min-width: 560px; /* forces scroll instead of squish */
 }
 
 .thead{
   background: rgba(8,18,14,.65);
   border-bottom: 1px solid rgba(57,255,136,.14);
   color: var(--glow);
+  position: sticky;
+  top: 0;
 }
 
 .tbody .tr{
@@ -222,8 +230,9 @@ body{
   color: var(--text);
 }
 
-.dim{color: var(--dim);}
+.dim{ color: var(--dim); }
 
+/* ===== Footer ===== */
 .footer{
   display:flex;
   justify-content:space-between;
@@ -232,8 +241,15 @@ body{
   border-top: 1px solid rgba(57,255,136,.14);
   background: rgba(4,10,8,.35);
   font-size: 11px;
+  flex-wrap: wrap;
+}
+.footer span{ flex: 1 1 auto; }
+@media (max-width: 520px){
+  .footer{ gap:6px; }
+  .footer span{ width:100%; }
 }
 
+/* ===== Evidence cards ===== */
 .cards{
   margin-top: 14px;
   display:grid;
@@ -242,7 +258,21 @@ body{
 }
 
 @media (min-width: 780px){
-  .cards{grid-template-columns: 1fr 1fr;}
+  .cards{ grid-template-columns: 1fr 1fr; }
+}
+
+/* 4-up grid on desktop, 1-up on mobile, 2-up on mid */
+.cards.four{
+  margin-top: 14px;
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 640px){
+  .cards.four{ grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 980px){
+  .cards.four{ grid-template-columns: 1fr 1fr; } /* keep 2x2 */
 }
 
 .card{
@@ -261,10 +291,16 @@ body{
 
 .card img{
   width:100%;
-  height: 360px;
+  height: auto;            /* responsive */
+  aspect-ratio: 4 / 3;     /* consistent on mobile */
   object-fit: cover;
   display:block;
   filter: contrast(1.1) saturate(.9);
+}
+
+/* If you want fixed heights on bigger screens only */
+@media (min-width: 780px){
+  .card img{ aspect-ratio: 16 / 10; }
 }
 
 .actions{
@@ -273,13 +309,15 @@ body{
   gap:10px;
   flex-wrap:wrap;
 }
-
-.center{
-  text-align:center;
+.actions .btn{ flex: 0 0 auto; }
+@media (max-width: 520px){
+  .actions .btn{ width:100%; }
 }
 
+.center{ text-align:center; }
+
 .big{
-  font-size: 38px;
+  font-size: clamp(28px, 7vw, 40px);
   margin: 4px 0 4px;
   color: var(--glow);
   text-shadow: 0 0 22px rgba(57,255,136,.15);
@@ -289,4 +327,19 @@ body{
   margin: 0;
   color: var(--text);
   opacity:.9;
+  font-size: clamp(13px, 3.6vw, 16px);
+}
+
+/* Evidence directory links (if you use them anywhere) */
+.evidence-row{
+  margin: 6px 0;
+  padding-left: 12px;
+  border-left: 2px solid rgba(57,255,136,.4);
+}
+.evidence-row a{
+  color: var(--glow);
+  text-decoration: none;
+}
+.evidence-row a:hover{
+  text-shadow: 0 0 8px rgba(57,255,136,.4);
 }
