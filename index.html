@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CCTV LOG TERMINAL</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="frame">
+    <header class="topbar">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="title">SECURITY CAMERA LOGS · NODE 07</div>
+      <div class="status">
+        <span class="badge">REC</span>
+        <span id="clock" class="mono"></span>
+      </div>
+    </header>
+
+    <section class="panel">
+      <div class="log mono" aria-live="polite">
+        <div>[BOOT] DVR Firmware v3.9.2</div>
+        <div>[SYNC] Time source: LOCAL</div>
+        <div>[LOAD] Cameras: CAM-01 CAM-02 CAM-03</div>
+        <div>[INDEX] Log table ready</div>
+        <div class="spacer"></div>
+        <div class="hint">ENTER 3-DIGIT ACCESS CODE TO OPEN CASE FILE</div>
+      </div>
+
+      <form id="codeForm" class="form" autocomplete="off">
+        <label class="mono" for="code">ACCESS CODE</label>
+        <div class="row">
+          <input
+            id="code"
+            name="code"
+            inputmode="numeric"
+            pattern="\\d{3}"
+            maxlength="3"
+            minlength="3"
+            placeholder="___"
+            aria-label="Three digit access code"
+            class="code mono"
+            required
+          />
+          <button class="btn mono" type="submit">UNLOCK</button>
+        </div>
+        <div id="msg" class="msg mono" role="status"></div>
+      </form>
+
+      <div class="table mono">
+        <div class="thead">
+          <div>TIME</div><div>CAM</div><div>EVENT</div><div>HASH</div>
+        </div>
+        <div class="tbody" id="fakeRows"></div>
+      </div>
+    </section>
+
+    <footer class="footer mono">
+      <span>CASE DIRECTORY: /vault/camlogs/</span>
+      <span class="dim">AUTHORIZED ACCESS ONLY</span>
+    </footer>
+  </main>
+
+  <script>
+    // ====== CONFIG (change these) ======
+    const CODE_SHOW_PHOTOS = "314";        // 3-digit code that opens the photo file
+    const CODE_HELP_ME     = "911";        // 3-digit code that redirects to help page
+    const PHOTO_PAGE       = "file.html";  // page that displays the 2 photos
+    const HELP_PAGE        = "help.html";  // "help me" page
+
+    // Image filenames used on file.html (must exist in repo)
+    // Put your images in the same folder as these html files.
+    const IMG_1 = "photo1.jpg";
+    const IMG_2 = "photo2.jpg";
+    // ==================================
+
+    // Pass chosen image names to file.html via querystring (so you can rename freely)
+    const fileUrl = () => `${PHOTO_PAGE}?a=${encodeURIComponent(IMG_1)}&b=${encodeURIComponent(IMG_2)}`;
+
+    const codeInput = document.getElementById("code");
+    const msg = document.getElementById("msg");
+    const form = document.getElementById("codeForm");
+    const clock = document.getElementById("clock");
+    const fakeRows = document.getElementById("fakeRows");
+
+    // Restrict to digits only
+    codeInput.addEventListener("input", () => {
+      codeInput.value = codeInput.value.replace(/\D/g, "").slice(0, 3);
+    });
+
+    // Clock
+    function tick() {
+      const d = new Date();
+      const pad = (n) => String(n).padStart(2, "0");
+      clock.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    }
+    setInterval(tick, 250);
+    tick();
+
+    // Fake log rows
+    function hex(n=8){
+      const chars = "abcdef0123456789";
+      let s = "";
+      for(let i=0;i<n;i++) s += chars[Math.floor(Math.random()*chars.length)];
+      return s;
+    }
+    function pad2(n){ return String(n).padStart(2,"0"); }
+    function makeRows(){
+      const cams = ["CAM-01","CAM-02","CAM-03"];
+      const events = ["MOTION", "NO SIGNAL", "FRAME DROP", "AUDIO PEAK", "MOTION", "IDLE"];
+      const now = new Date();
+      for(let i=0;i<10;i++){
+        const t = new Date(now.getTime() - (i*37+13)*1000);
+        const row = document.createElement("div");
+        row.className = "tr";
+        row.innerHTML = `
+          <div>${pad2(t.getHours())}:${pad2(t.getMinutes())}:${pad2(t.getSeconds())}</div>
+          <div>${cams[Math.floor(Math.random()*cams.length)]}</div>
+          <div>${events[Math.floor(Math.random()*events.length)]}</div>
+          <div class="dim">${hex(12)}</div>
+        `;
+        fakeRows.appendChild(row);
+      }
+    }
+    makeRows();
+
+    // Unlock logic
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const code = codeInput.value;
+
+      msg.classList.remove("ok","bad");
+      msg.textContent = "";
+
+      if (!/^\d{3}$/.test(code)) {
+        msg.classList.add("bad");
+        msg.textContent = "INVALID FORMAT · REQUIRE 3 DIGITS";
+        return;
+      }
+
+      // tiny delay for vibe
+      msg.textContent = "VERIFYING…";
+      setTimeout(() => {
+        if (code === CODE_SHOW_PHOTOS) {
+          msg.classList.add("ok");
+          msg.textContent = "ACCESS GRANTED · OPENING CASE FILE…";
+          setTimeout(() => location.href = fileUrl(), 450);
+        } else if (code === CODE_HELP_ME) {
+          msg.classList.add("ok");
+          msg.textContent = "ROUTE OVERRIDE · REDIRECTING…";
+          setTimeout(() => location.href = HELP_PAGE, 450);
+        } else {
+          msg.classList.add("bad");
+          msg.textContent = "ACCESS DENIED · INCIDENT LOGGED";
+          codeInput.select();
+        }
+      }, 350);
+    });
+  </script>
+</body>
+</html>
