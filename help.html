@@ -15,23 +15,56 @@
     </header>
 
     <section class="panel center">
-      <h1 class="mono big">help me</h1>
-      <p class="mono caption">proove my innocence</p>
+  <h1 class="mono big">HELP ME!</h1>
+  <p class="mono caption">Proove my innocence ... </p>
 
-      <div class="log mono" style="margin-top:18px;">
-        <div>[TRACE] Someone changed the logs.</div>
-        <div>[TRACE] The footage is real. The story isn’t.</div>
-        <div>[TRACE] Find the missing minute.</div>
-      </div>
+  <div id="evidenceBox" class="log mono" style="margin-top:18px;">
+    <div>[EVIDENCE DIRECTORY FOUND]</div>
+    <div>[PATH] /vault/evidence/</div>
+    <div class="spacer"></div>
+    <div id="evidenceList"></div>
+  </div>
 
-      <div class="actions">
-        <a class="btn mono" href="index.html">← BACK</a>
-      </div>
-    </section>
+  <div class="actions">
+    <a class="btn mono" href="index.html">← BACK</a>
+  </div>
+</section>
+
 
     <footer class="footer mono">
       <span class="dim">signal strength: weak</span>
     </footer>
   </main>
+  <script>
+/*
+  MANUALLY LIST FILES IN /evidence/
+  This is required on GitHub Pages / static hosting.
+*/
+const EVIDENCE_FILES = [
+  "log_0423.txt",
+  "frame_missing.jpg",
+  "audio_01.mp3",
+  "statement.pdf"
+];
+
+const basePath = "evidence/";
+const list = document.getElementById("evidenceList");
+
+EVIDENCE_FILES.forEach((file, i) => {
+  setTimeout(() => {
+    const row = document.createElement("div");
+    row.className = "evidence-row";
+
+    const link = document.createElement("a");
+    link.href = basePath + file;
+    link.textContent = file;
+    link.target = "_blank";
+
+    row.appendChild(link);
+    list.appendChild(row);
+  }, 600 * (i + 1));
+});
+</script>
+
 </body>
 </html>
