@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CASE FILE · EVIDENCE</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="frame">
+    <header class="topbar">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      <div class="title">CASE FILE · EVIDENCE PACKAGE</div>
+      <div class="status"><span class="badge">SECURE</span></div>
+    </header>
+
+    <section class="panel">
+      <div class="log mono">
+        <div>[OPEN] /vault/camlogs/case_07/evidence.zip</div>
+        <div>[INFO] Contents: 2 image assets</div>
+        <div>[WARN] Do not distribute</div>
+      </div>
+
+      <div class="cards">
+        <figure class="card">
+          <figcaption class="mono dim">EVIDENCE_01</figcaption>
+          <img id="imgA" alt="Evidence image 1" />
+        </figure>
+
+        <figure class="card">
+          <figcaption class="mono dim">EVIDENCE_02</figcaption>
+          <img id="imgB" alt="Evidence image 2" />
+        </figure>
+      </div>
+
+      <div class="actions">
+        <a class="btn mono" href="index.html">← BACK TO LOGS</a>
+      </div>
+    </section>
+
+    <footer class="footer mono">
+      <span class="dim">checksum verification: pending</span>
+    </footer>
+  </main>
+
+  <script>
+    // Reads ?a=...&b=... from the URL, defaults if absent
+    const params = new URLSearchParams(location.search);
+    const a = params.get("a") || "photo1.jpg";
+    const b = params.get("b") || "photo2.jpg";
+
+    document.getElementById("imgA").src = a;
+    document.getElementById("imgB").src = b;
+  </script>
+</body>
+</html>
