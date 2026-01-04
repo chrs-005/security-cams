@@ -33,17 +33,15 @@
         <label class="mono" for="code">ACCESS CODE</label>
         <div class="row">
           <input
-            id="code"
-            name="code"
-            inputmode="numeric"
-            pattern="\\d{3}"
-            maxlength="3"
-            minlength="3"
-            placeholder="___"
-            aria-label="Three digit access code"
-            class="code mono"
-            required
-          />
+  id="code"
+  name="code"
+  inputmode="numeric"
+  maxlength="3"
+  placeholder="___"
+  aria-label="Three digit access code"
+  class="code mono"
+  required
+        />
           <button class="btn mono" type="submit">UNLOCK</button>
         </div>
         <div id="msg" class="msg mono" role="status"></div>
@@ -128,36 +126,39 @@
 
     // Unlock logic
     form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const code = codeInput.value;
+  e.preventDefault();              // stops page reload
+  form.reportValidity?.();         // optional, but we won’t rely on pattern anymore
 
-      msg.classList.remove("ok","bad");
-      msg.textContent = "";
+  const code = (codeInput.value || "").replace(/\D/g, "").slice(0, 3);
+  codeInput.value = code;
 
-      if (!/^\d{3}$/.test(code)) {
-        msg.classList.add("bad");
-        msg.textContent = "INVALID FORMAT · REQUIRE 3 DIGITS";
-        return;
-      }
+  msg.classList.remove("ok","bad");
+  msg.textContent = "";
 
-      // tiny delay for vibe
-      msg.textContent = "VERIFYING…";
-      setTimeout(() => {
-        if (code === CODE_SHOW_PHOTOS) {
-          msg.classList.add("ok");
-          msg.textContent = "ACCESS GRANTED · OPENING CASE FILE…";
-          setTimeout(() => location.href = fileUrl(), 450);
-        } else if (code === CODE_HELP_ME) {
-          msg.classList.add("ok");
-          msg.textContent = "ROUTE OVERRIDE · REDIRECTING…";
-          setTimeout(() => location.href = HELP_PAGE, 450);
-        } else {
-          msg.classList.add("bad");
-          msg.textContent = "ACCESS DENIED · INCIDENT LOGGED";
-          codeInput.select();
-        }
-      }, 350);
-    });
+  if (code.length !== 3) {
+    msg.classList.add("bad");
+    msg.textContent = "INVALID FORMAT · REQUIRE 3 DIGITS";
+    return;
+  }
+
+  msg.textContent = "VERIFYING…";
+  setTimeout(() => {
+    if (code === CODE_SHOW_PHOTOS) {
+      msg.classList.add("ok");
+      msg.textContent = "ACCESS GRANTED · OPENING CASE FILE…";
+      setTimeout(() => location.href = fileUrl(), 450);
+    } else if (code === CODE_HELP_ME) {
+      msg.classList.add("ok");
+      msg.textContent = "ROUTE OVERRIDE · REDIRECTING…";
+      setTimeout(() => location.href = HELP_PAGE, 450);
+    } else {
+      msg.classList.add("bad");
+      msg.textContent = "ACCESS DENIED · INCIDENT LOGGED";
+      codeInput.select();
+    }
+  }, 350);
+});
+
   </script>
 </body>
 </html>
