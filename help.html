@@ -14,55 +14,49 @@
       <div class="status"><span class="badge">LIVE</span></div>
     </header>
 
-    <section class="panel center">
-  <h1 class="mono big">HELP ME!</h1>
-  <p class="mono caption">Proove my innocence ... </p>
+    <section class="panel">
+      <div class="center">
+        <h1 class="mono big">help me</h1>
+        <p class="mono caption">proove my innocence</p>
+      </div>
 
-  <div id="evidenceBox" class="log mono" style="margin-top:18px;">
-    <div>[EVIDENCE DIRECTORY FOUND]</div>
-    <div>[PATH] /vault/evidence/</div>
-    <div class="spacer"></div>
-    <div id="evidenceList"></div>
-  </div>
+      <div class="log mono" style="margin-top:18px;">
+        <div>[OPEN] /vault/evidence/</div>
+        <div>[INFO] Recovered: 4 image assets</div>
+        <div>[NOTE] These frames are being used against me.</div>
+      </div>
 
-  <div class="actions">
-    <a class="btn mono" href="index.html">← BACK</a>
-  </div>
-</section>
+      <div class="cards four">
+        <figure class="card">
+          <figcaption class="mono dim">EVIDENCE_01</figcaption>
+          <img src="evidence/photo1.jpg" alt="Evidence image 1" />
+        </figure>
 
+        <figure class="card">
+          <figcaption class="mono dim">EVIDENCE_02</figcaption>
+          <img src="evidence/photo2.jpg" alt="Evidence image 2" />
+        </figure>
+
+        <figure class="card">
+          <figcaption class="mono dim">EVIDENCE_03</figcaption>
+          <img src="evidence/photo3.jpg" alt="Evidence image 3" />
+        </figure>
+
+        <figure class="card">
+          <figcaption class="mono dim">EVIDENCE_04</figcaption>
+          <img src="evidence/photo4.jpg" alt="Evidence image 4" />
+        </figure>
+      </div>
+
+      <div class="actions">
+        <a class="btn mono" href="index.html">← BACK</a>
+      </div>
+    </section>
 
     <footer class="footer mono">
-      <span class="dim">signal strength: weak</span>
+      <span class="dim">checksum verification: pending</span>
+      <span class="dim">source: /evidence/</span>
     </footer>
   </main>
-  <script>
-/*
-  MANUALLY LIST FILES IN /evidence/
-  This is required on GitHub Pages / static hosting.
-*/
-const EVIDENCE_FILES = [
-  "photo2.jpg",
-  "photo1.jpg"
-];
-
-const basePath = "evidence/";
-const list = document.getElementById("evidenceList");
-
-EVIDENCE_FILES.forEach((file, i) => {
-  setTimeout(() => {
-    const row = document.createElement("div");
-    row.className = "evidence-row";
-
-    const link = document.createElement("a");
-    link.href = basePath + file;
-    link.textContent = file;
-    link.target = "_blank";
-
-    row.appendChild(link);
-    list.appendChild(row);
-  }, 600 * (i + 1));
-});
-</script>
-
 </body>
 </html>
