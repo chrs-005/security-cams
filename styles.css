@@ -55,6 +55,22 @@ body{
   mix-blend-mode: overlay;
   opacity:.35;
 }
+.cards.four{
+  margin-top: 14px;
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+@media (min-width: 780px){
+  .cards.four{
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.cards.four .card img{
+  height: 320px;
+}
 
 .topbar{
   display:flex;
