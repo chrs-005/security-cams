@@ -14,38 +14,19 @@
       <div class="status"><span class="badge">LIVE</span></div>
     </header>
 
-    <section class="panel">
-      <div class="center">
-        <h1 class="mono big">help me</h1>
-        <p class="mono caption">proove my innocence</p>
-      </div>
+    <section class="panel center">
+      <h1 class="mono big">help me</h1>
+      <p class="mono caption">proove my innocence</p>
 
-      <div class="log mono" style="margin-top:18px;">
-        <div>[OPEN] /vault/evidence/</div>
-        <div>[INFO] Recovered: 4 image assets</div>
-        <div>[NOTE] These frames are being used against me.</div>
-      </div>
+      <div id="evidenceBox" class="log mono" style="margin-top:18px;">
+        <div>[EVIDENCE DIRECTORY FOUND]</div>
+        <div>[PATH] /vault/evidence/</div>
+        <div class="spacer"></div>
 
-      <div class="cards four">
-        <figure class="card">
-          <figcaption class="mono dim">EVIDENCE_01</figcaption>
-          <img src="evidence/photo1.jpg" alt="Evidence image 1" />
-        </figure>
+        <div id="evidenceList"></div>
 
-        <figure class="card">
-          <figcaption class="mono dim">EVIDENCE_02</figcaption>
-          <img src="evidence/photo2.jpg" alt="Evidence image 2" />
-        </figure>
-
-        <figure class="card">
-          <figcaption class="mono dim">EVIDENCE_03</figcaption>
-          <img src="evidence/photo3.jpg" alt="Evidence image 3" />
-        </figure>
-
-        <figure class="card">
-          <figcaption class="mono dim">EVIDENCE_04</figcaption>
-          <img src="evidence/photo4.jpg" alt="Evidence image 4" />
-        </figure>
+        <div class="spacer"></div>
+        <div class="dim">Hint: open files in order.</div>
       </div>
 
       <div class="actions">
@@ -54,9 +35,52 @@
     </section>
 
     <footer class="footer mono">
-      <span class="dim">checksum verification: pending</span>
-      <span class="dim">source: /evidence/</span>
+      <span class="dim">signal strength: weak</span>
     </footer>
   </main>
+
+  <script>
+    // Files must be located in: /evidence/
+    const EVIDENCE_FILES = [
+      "receipt.png",
+      "nums.png",
+      "hmm.mp4",
+      "chats1.png",
+      "chats2.png"
+    ];
+
+    const basePath = "evidence/";
+    const list = document.getElementById("evidenceList");
+
+    function fileType(name){
+      const ext = (name.split(".").pop() || "").toLowerCase();
+      if (["png","jpg","jpeg","webp","gif"].includes(ext)) return "IMG";
+      if (["mp4","webm","mov"].includes(ext)) return "VID";
+      if (["pdf"].includes(ext)) return "PDF";
+      if (["txt","log","md","json"].includes(ext)) return "TXT";
+      return "FILE";
+    }
+
+    EVIDENCE_FILES.forEach((file, i) => {
+      setTimeout(() => {
+        const row = document.createElement("div");
+        row.className = "evidence-row";
+
+        const tag = document.createElement("span");
+        tag.className = "evidence-tag";
+        tag.textContent = fileType(file);
+
+        const link = document.createElement("a");
+        link.href = basePath + file;
+        link.textContent = file;
+        link.target = "_blank";
+        link.rel = "noopener";
+
+        row.appendChild(tag);
+        row.appendChild(link);
+        list.appendChild(row);
+      }, 600 * (i + 1));
+    });
+  </script>
 </body>
 </html>
